@@ -266,10 +266,12 @@ func (t *Text) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	switch msg := msg.(type) {
 	case updateValueMsg:
-		t.textarea.SetValue(string(msg))
-		t.textarea, cmd = t.textarea.Update(msg)
-		cmds = append(cmds, cmd)
-		t.accessor.Set(t.textarea.Value())
+		if t.focused {
+			t.textarea.SetValue(string(msg))
+			t.textarea, cmd = t.textarea.Update(msg)
+			cmds = append(cmds, cmd)
+			t.accessor.Set(t.textarea.Value())
+		}
 	case updateFieldMsg:
 		var cmds []tea.Cmd
 		if ok, hash := t.placeholder.shouldUpdate(); ok {
